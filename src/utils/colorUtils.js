@@ -178,11 +178,22 @@ export function generateShades(hexColor) {
 
   const result = {};
   
-  Object.entries(shades).forEach(([shade, { l, s, h }]) => {
-    const adjustedRgb = hslToRgb(h, Math.min(s, 100), Math.min(l, 100));
-    const hex = rgbToHex(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
-    const hslValues = rgbToHsl(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
-    const oklch = rgbToOklch(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
+  Object.entries(shades).forEach(([shade, { l, s, h, exact }]) => {
+    let hex, adjustedRgb, hslValues, oklch;
+    
+    if (exact && shade === '500') {
+      // Use exact input color for base shade
+      hex = hexColor;
+      adjustedRgb = hexToRgb(hexColor);
+      hslValues = hsl;
+      oklch = rgbToOklch(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
+    } else {
+      // Calculate color normally
+      adjustedRgb = hslToRgb(h, Math.min(s, 100), Math.min(l, 100));
+      hex = rgbToHex(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
+      hslValues = rgbToHsl(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
+      oklch = rgbToOklch(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
+    }
     
     result[shade] = {
       hex,
