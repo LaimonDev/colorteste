@@ -310,6 +310,14 @@ export default function ColorGenerator() {
           </VStack>
         </ScaleFade>
       </Container>
+
+      {/* Export Code Modal */}
+      <ExportCodeModal
+        isOpen={isOpen}
+        onClose={onClose}
+        palette={palette}
+        paletteName={paletteName}
+      />
     </Box>
   );
 }
