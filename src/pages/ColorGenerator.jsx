@@ -24,7 +24,7 @@ import ColorPalette from '../components/ColorPalette';
 import UIExamples from '../components/UIExamples';
 
 export default function ColorGenerator() {
-  const [primaryColor, setPrimaryColor] = useState('#505c47');
+  const [primaryColor, setPrimaryColor] = useState('#4ade80');
   const [colorFormat, setColorFormat] = useState('HEX');
   const [palette, setPalette] = useState({});
   const [paletteName, setPaletteName] = useState('Palette 1');
