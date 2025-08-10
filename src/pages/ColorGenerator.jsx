@@ -126,7 +126,7 @@ export default function ColorGenerator() {
                     alignItems="center" 
                     justifyContent="center"
                   >
-                    <FiPalette color="white" size={24} />
+                    <FiHome color="white" size={24} />
                   </Box>
                   <Heading 
                     color={textColor}
