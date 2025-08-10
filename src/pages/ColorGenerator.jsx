@@ -259,6 +259,23 @@ export default function ColorGenerator() {
                           }}
                         />
                       </InputGroup>
+                      <IconButton 
+                        icon={<CopyIcon />}
+                        size="lg"
+                        colorScheme="purple"
+                        variant="ghost"
+                        borderRadius="xl"
+                        onClick={() => {
+                          navigator.clipboard.writeText(primaryColor);
+                          toast({
+                            title: 'Color copied!',
+                            description: `${primaryColor} copied to clipboard`,
+                            status: 'success',
+                            duration: 2000,
+                            isClosable: true,
+                          });
+                        }}
+                      />
                     </HStack>
                   </VStack>
 
