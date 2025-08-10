@@ -31,6 +31,7 @@ const ExportCodeModal = ({ isOpen, onClose, palette, paletteName }) => {
   const hoverBg = useColorModeValue("gray.200", "gray.600");
   const codeBg = useColorModeValue("gray.50", "gray.900");
   const borderColor = useColorModeValue("gray.200", "gray.600");
+  const badgeBg = useColorModeValue("gray.200", "gray.600");
 
   const formats = [
     { name: 'Tailwind 3', badge: 'free' },
