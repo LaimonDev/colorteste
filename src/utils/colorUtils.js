@@ -146,7 +146,8 @@ export function generateShades(hexColor) {
     500: { 
       l: hsl.l, 
       s: hsl.s, 
-      h: hsl.h 
+      h: hsl.h,
+      exact: true // Flag to use exact input hex
     }, // base color - exact match
     600: { 
       l: Math.max(hsl.l - 8, 12), 
