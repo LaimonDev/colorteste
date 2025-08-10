@@ -30,6 +30,7 @@ export default function ColorGenerator() {
   const [colorFormat, setColorFormat] = useState('HEX');
   const [palette, setPalette] = useState({});
   const [paletteName, setPaletteName] = useState('My Palette');
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const toast = useToast();
 
   // Color mode values
