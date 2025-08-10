@@ -220,9 +220,9 @@ const ExportCodeModal = ({ isOpen, onClose, palette, paletteName }) => {
             {/* Code Display */}
             <VStack align="stretch" spacing={4}>
               <Box
-                bg={useColorModeValue("gray.50", "gray.900")}
+                bg={codeBg}
                 border="1px solid"
-                borderColor={useColorModeValue("gray.200", "gray.600")}
+                borderColor={borderColor}
                 borderRadius="xl"
                 p={4}
                 position="relative"
