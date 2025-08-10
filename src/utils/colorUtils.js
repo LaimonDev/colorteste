@@ -108,32 +108,77 @@ export function rgbToOklch(r, g, b) {
   };
 }
 
-// Generate color shades based on a base color
+// Generate color shades based on a base color - IMPROVED ALGORITHM
 export function generateShades(hexColor) {
   const rgb = hexToRgb(hexColor);
   if (!rgb) return {};
 
   const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
   
-  // Tailwind-style shade generation
+  // Improved shade generation that maintains color character
+  // Keep hue consistent and maintain reasonable saturation in light shades
   const shades = {
-    50: { l: 95, s: hsl.s * 0.1 },
-    100: { l: 90, s: hsl.s * 0.2 },
-    200: { l: 80, s: hsl.s * 0.4 },
-    300: { l: 70, s: hsl.s * 0.6 },
-    400: { l: 60, s: hsl.s * 0.8 },
-    500: { l: hsl.l, s: hsl.s }, // base color
-    600: { l: Math.max(hsl.l - 10, 10), s: hsl.s * 1.1 },
-    700: { l: Math.max(hsl.l - 20, 8), s: hsl.s * 1.2 },
-    800: { l: Math.max(hsl.l - 30, 6), s: hsl.s * 1.3 },
-    900: { l: Math.max(hsl.l - 40, 4), s: hsl.s * 1.4 },
-    950: { l: Math.max(hsl.l - 50, 2), s: hsl.s * 1.5 }
+    50: { 
+      l: 96, 
+      s: Math.max(hsl.s * 0.4, 8), // Maintain some saturation even in light shades
+      h: hsl.h 
+    },
+    100: { 
+      l: 92, 
+      s: Math.max(hsl.s * 0.5, 10),
+      h: hsl.h 
+    },
+    200: { 
+      l: 84, 
+      s: Math.max(hsl.s * 0.6, 12),
+      h: hsl.h 
+    },
+    300: { 
+      l: 76, 
+      s: Math.max(hsl.s * 0.7, 14),
+      h: hsl.h 
+    },
+    400: { 
+      l: 64, 
+      s: Math.max(hsl.s * 0.85, 16),
+      h: hsl.h 
+    },
+    500: { 
+      l: hsl.l, 
+      s: hsl.s, 
+      h: hsl.h 
+    }, // base color - exact match
+    600: { 
+      l: Math.max(hsl.l - 8, 12), 
+      s: Math.min(hsl.s * 1.1, 100),
+      h: hsl.h 
+    },
+    700: { 
+      l: Math.max(hsl.l - 16, 10), 
+      s: Math.min(hsl.s * 1.2, 100),
+      h: hsl.h 
+    },
+    800: { 
+      l: Math.max(hsl.l - 24, 8), 
+      s: Math.min(hsl.s * 1.3, 100),
+      h: hsl.h 
+    },
+    900: { 
+      l: Math.max(hsl.l - 30, 6), 
+      s: Math.min(hsl.s * 1.4, 100),
+      h: hsl.h 
+    },
+    950: { 
+      l: Math.max(hsl.l - 36, 4), 
+      s: Math.min(hsl.s * 1.5, 100),
+      h: hsl.h 
+    }
   };
 
   const result = {};
   
-  Object.entries(shades).forEach(([shade, { l, s }]) => {
-    const adjustedRgb = hslToRgb(hsl.h, Math.min(s, 100), Math.min(l, 100));
+  Object.entries(shades).forEach(([shade, { l, s, h }]) => {
+    const adjustedRgb = hslToRgb(h, Math.min(s, 100), Math.min(l, 100));
     const hex = rgbToHex(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
     const hslValues = rgbToHsl(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
     const oklch = rgbToOklch(adjustedRgb.r, adjustedRgb.g, adjustedRgb.b);
