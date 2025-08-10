@@ -18,7 +18,7 @@ import {
   InputGroup
 } from '@chakra-ui/react';
 import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
-import { FiPalette, FiSave } from 'react-icons/fi';
+import { FiHome } from 'react-icons/fi';
 import { generateShades, formatColorValues, isLightColor } from '../utils/colorUtils';
 import ColorPalette from '../components/ColorPalette';
 import UIExamples from '../components/UIExamples';
