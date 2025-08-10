@@ -58,27 +58,8 @@ export default function ColorGenerator() {
     }
   };
 
-  const handleSavePalette = () => {
-    // Save to localStorage
-    const savedPalettes = JSON.parse(localStorage.getItem('colorPalettes') || '[]');
-    const newPalette = {
-      id: Date.now(),
-      name: paletteName,
-      primaryColor,
-      palette,
-      createdAt: new Date().toISOString()
-    };
-    
-    savedPalettes.push(newPalette);
-    localStorage.setItem('colorPalettes', JSON.stringify(savedPalettes));
-    
-    toast({
-      title: 'Palette saved!',
-      description: `"${paletteName}" has been saved to your palettes.`,
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
+  const handleExportCode = () => {
+    onOpen();
   };
 
   return (
