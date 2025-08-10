@@ -263,7 +263,7 @@ export default function ColorGenerator() {
                     </HStack>
                   </VStack>
 
-                  {/* Save Button */}
+                  {/* Export Code Button */}
                   <Button
                     size="lg"
                     bgGradient="linear(to-r, purple.500, pink.500)"
@@ -276,14 +276,14 @@ export default function ColorGenerator() {
                     _active={{
                       transform: "translateY(0)",
                     }}
-                    onClick={handleSavePalette}
+                    onClick={handleExportCode}
                     borderRadius="xl"
                     fontSize="lg"
                     fontWeight="bold"
                     transition="all 0.3s ease"
                     leftIcon={<CopyIcon />}
                   >
-                    Save Palette
+                    Export Code
                   </Button>
                 </VStack>
 
