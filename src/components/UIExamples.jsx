@@ -117,7 +117,7 @@ export default function UIExamples({ primaryColor, palette }) {
               <VStack spacing={3} align="stretch">
                 {/* Design System Meeting */}
                 <Box
-                  bg="linear-gradient(135deg, #9f7aea, #b794f6)"
+                  bgGradient={`linear(135deg, ${getShadeColor('500')}, ${getShadeColor('400')})`}
                   borderRadius="xl"
                   p={4}
                   position="relative"
@@ -138,7 +138,7 @@ export default function UIExamples({ primaryColor, palette }) {
                           w="28px"
                           h="28px"
                           borderRadius="full"
-                          bg={`hsl(${i * 60}, 70%, 60%)`}
+                          bg={getShadeColor(`${200 + i * 50}`)}
                           border="2px solid white"
                           display="flex"
                           alignItems="center"
@@ -158,7 +158,7 @@ export default function UIExamples({ primaryColor, palette }) {
 
                 {/* Lunch */}
                 <Box
-                  bg="linear-gradient(135deg, #ed64a6, #f687b3)"
+                  bgGradient={`linear(135deg, ${getShadeColor('600')}, ${getShadeColor('500')})`}
                   borderRadius="xl"
                   p={4}
                   position="relative"
@@ -179,7 +179,7 @@ export default function UIExamples({ primaryColor, palette }) {
 
                 {/* Design Review */}
                 <Box
-                  bg="linear-gradient(135deg, #fd9720, #fdb560)"
+                  bgGradient={`linear(135deg, ${getShadeColor('700')}, ${getShadeColor('600')})`}
                   borderRadius="xl"
                   p={4}
                   position="relative"
@@ -200,7 +200,7 @@ export default function UIExamples({ primaryColor, palette }) {
                           w="28px"
                           h="28px"
                           borderRadius="full"
-                          bg={`hsl(${i * 120}, 70%, 60%)`}
+                          bg={getShadeColor(`${300 + i * 100}`)}
                           border="2px solid white"
                           display="flex"
                           alignItems="center"
