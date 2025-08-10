@@ -42,13 +42,13 @@ export default function UIExamples({ primaryColor, palette }) {
             <VStack align="stretch" spacing={4}>
               {/* Image placeholder */}
               <Box
-                h="120px"
+                h="140px"
                 bg={getShadeColor('200')}
                 borderRadius="xl"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                backgroundImage="url('https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=300&h=120&fit=crop&crop=center')"
+                backgroundImage="url('https://images.unsplash.com/photo-1681826291722-70bd7e9e6fc3?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBmaW5hbmNlJTIwYXBwfGVufDB8fHx8MTc1NDgyMzQ3OHww&ixlib=rb-4.1.0&q=85')"
                 backgroundSize="cover"
                 backgroundPosition="center"
               />
@@ -63,19 +63,20 @@ export default function UIExamples({ primaryColor, palette }) {
                   <Text fontSize="2xl" fontWeight="bold" color="gray.800">$12,543</Text>
                   
                   {/* Chart representation */}
-                  <HStack spacing={1} h="60px" align="end">
-                    {[30, 45, 25, 60, 40, 70].map((height, i) => (
+                  <HStack spacing={1} h="60px" align="end" mt={3}>
+                    {[32, 38, 28, 52, 44, 58].map((height, i) => (
                       <Box
                         key={i}
-                        bg={getShadeColor(400 + i * 50)}
+                        bg={getShadeColor('400')}
                         h={`${height}px`}
                         flex={1}
-                        borderRadius="sm"
+                        borderRadius="2px"
+                        mx="1px"
                       />
                     ))}
                   </HStack>
                   
-                  <HStack spacing={4} fontSize="xs" color="gray.600">
+                  <HStack justify="space-between" fontSize="xs" color="gray.600" mt={1}>
                     <Text>Jan</Text>
                     <Text>Feb</Text>
                     <Text>Mar</Text>
@@ -100,13 +101,13 @@ export default function UIExamples({ primaryColor, palette }) {
             <VStack align="stretch" spacing={4}>
               {/* Image placeholder */}
               <Box
-                h="120px"
+                h="140px"
                 bg={getShadeColor('400')}
                 borderRadius="xl"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                backgroundImage="url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=120&fit=crop&crop=center')"
+                backgroundImage="url('https://images.unsplash.com/photo-1593508512255-86ab42a8e620?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHxWUiUyMGhlYWRzZXR8ZW58MHx8fHwxNzU0ODIzNDg0fDA&ixlib=rb-4.1.0&q=85')"
                 backgroundSize="cover"
                 backgroundPosition="center"
               />
@@ -132,13 +133,13 @@ export default function UIExamples({ primaryColor, palette }) {
             <VStack align="stretch" spacing={4}>
               {/* Image placeholder */}
               <Box
-                h="100px"
+                h="120px"
                 bg={getShadeColor('300')}
                 borderRadius="xl"
                 display="flex"
                 alignItems="center"
                 justifyContent="center"
-                backgroundImage="url('https://images.unsplash.com/photo-1552664730-d307ca884978?w=300&h=100&fit=crop&crop=center')"
+                backgroundImage="url('https://images.unsplash.com/photo-1690264459607-a90b23d887f8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBjb2xsYWJvcmF0aW9ufGVufDB8fHx8MTc1NDgyMzQ4OXww&ixlib=rb-4.1.0&q=85')"
                 backgroundSize="cover"
                 backgroundPosition="center"
               />
