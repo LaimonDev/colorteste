@@ -10,15 +10,17 @@ import {
   Button,
   Grid,
   Flex,
-  Badge,
   IconButton,
   useToast,
-  Divider,
   Card,
   CardBody,
-  useClipboard
+  useColorModeValue,
+  ScaleFade,
+  InputGroup,
+  InputLeftElement
 } from '@chakra-ui/react';
-import { CopyIcon, SettingsIcon, DownloadIcon, StarIcon } from '@chakra-ui/icons';
+import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
+import { FiPalette } from 'react-icons/fi';
 import { generateShades, formatColorValues, isLightColor } from '../utils/colorUtils';
 import ColorPalette from '../components/ColorPalette';
 import UIExamples from '../components/UIExamples';
@@ -27,8 +29,18 @@ export default function ColorGenerator() {
   const [primaryColor, setPrimaryColor] = useState('#4ade80');
   const [colorFormat, setColorFormat] = useState('HEX');
   const [palette, setPalette] = useState({});
-  const [paletteName, setPaletteName] = useState('Palette 1');
+  const [paletteName, setPaletteName] = useState('My Palette');
   const toast = useToast();
+
+  // Color mode values
+  const bgGradient = useColorModeValue(
+    "linear(to-br, blue.50, purple.50, pink.50)",
+    "linear(to-br, gray.900, purple.900, blue.900)"
+  );
+  const cardBg = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("gray.800", "gray.100");
+  const mutedColor = useColorModeValue("gray.600", "gray.400");
+  const inputBg = useColorModeValue("gray.50", "gray.700");
 
   // Generate palette when primary color changes
   useEffect(() => {
@@ -68,218 +80,255 @@ export default function ColorGenerator() {
     });
   };
 
-  const handleExportPalette = () => {
-    const exportData = {
-      name: paletteName,
-      primaryColor,
-      shades: {}
-    };
-
-    Object.entries(palette).forEach(([shade, colors]) => {
-      exportData.shades[shade] = formatColorValues(colors);
-    });
-
-    const dataStr = JSON.stringify(exportData, null, 2);
-    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
-    
-    const exportFileDefaultName = `${paletteName.toLowerCase().replace(' ', '_')}_palette.json`;
-    
-    const linkElement = document.createElement('a');
-    linkElement.setAttribute('href', dataUri);
-    linkElement.setAttribute('download', exportFileDefaultName);
-    linkElement.click();
-
-    toast({
-      title: 'Palette exported!',
-      description: 'Your color palette has been downloaded as JSON.',
-      status: 'success',
-      duration: 3000,
-      isClosable: true,
-    });
-  };
-
   return (
-    <Box minH="100vh" bg="gray.50" className="home">
-      {/* Header Navigation */}
-      <Box bg="white" boxShadow="sm" py={4}>
-        <Container maxW="container.xl">
-          <HStack justify="space-between">
-            <HStack spacing={8}>
-              <Flex align="center" gap={2}>
-                <Box w={8} h={8} bg="black" borderRadius="md" display="flex" alignItems="center" justifyContent="center">
-                  <Text color="white" fontWeight="bold" fontSize="sm">UI</Text>
-                </Box>
-                <Text fontSize="xl" fontWeight="bold" color="black">Colors</Text>
-              </Flex>
-              <HStack spacing={6} color="gray.600">
-                <Text cursor="pointer" _hover={{color: 'black'}} fontWeight="semibold">Generate</Text>
-                <Text cursor="pointer" _hover={{color: 'black'}}>My palettes</Text>
-                <Text cursor="pointer" _hover={{color: 'black'}}>Tailwind Colors</Text>
-                <Text cursor="pointer" _hover={{color: 'black'}}>More</Text>
-              </HStack>
-            </HStack>
-            <HStack spacing={4}>
-              <Text cursor="pointer" color="gray.600" _hover={{color: 'black'}}>Feedback</Text>
-              <Button colorScheme="blackAlpha" size="sm" borderRadius="xl">
-                Sign in
-              </Button>
-            </HStack>
-          </HStack>
-        </Container>
-      </Box>
+    <Box 
+      bgGradient={bgGradient}
+      minH="100vh" 
+      py={{ base: 6, md: 12 }}
+      position="relative"
+      overflow="hidden"
+    >
+      {/* Background decoration */}
+      <Box
+        position="absolute"
+        top="-50px"
+        right="-50px"
+        width="200px"
+        height="200px"
+        borderRadius="full"
+        bgGradient="linear(to-br, purple.300, pink.300)"
+        opacity={0.1}
+        zIndex={0}
+      />
+      <Box
+        position="absolute"
+        bottom="-100px"
+        left="-100px"
+        width="300px"
+        height="300px"
+        borderRadius="full"
+        bgGradient="linear(to-tr, blue.300, teal.300)"
+        opacity={0.1}
+        zIndex={0}
+      />
 
-      <Container maxW="container.xl" py={8}>
-        <Grid templateColumns="1fr 2fr" gap={12} alignItems="start">
-          {/* Left Panel - Controls */}
-          <VStack spacing={6} align="stretch">
-            <VStack align="stretch" spacing={4}>
-              <Heading size="lg" color="black">
-                Tailwind CSS Color Generator
-              </Heading>
-              <Text color="gray.600" fontSize="sm">
-                Instantly create stunning color scales by entering a base color or hitting the spacebar.
-              </Text>
-            </VStack>
-
-            {/* Primary Color Picker */}
-            <VStack align="stretch" spacing={4}>
-              <HStack justify="space-between">
-                <Text fontWeight="semibold" color="black">Primary</Text>
-                <HStack>
-                  <Text fontSize="sm" color="gray.600">{colorFormat}</Text>
-                  <IconButton 
-                    size="xs" 
-                    variant="ghost" 
-                    icon={<SettingsIcon />}
-                    onClick={() => {
-                      const formats = ['HEX', 'HSL', 'RGB', 'OKLCH'];
-                      const currentIndex = formats.indexOf(colorFormat);
-                      const nextIndex = (currentIndex + 1) % formats.length;
-                      setColorFormat(formats[nextIndex]);
-                    }}
-                  />
-                </HStack>
-              </HStack>
-              
-              <HStack>
-                <Box 
-                  w={10} 
-                  h={10} 
-                  bg={primaryColor} 
-                  borderRadius="md" 
-                  border="2px solid" 
-                  borderColor="gray.300"
-                  cursor="pointer"
-                  position="relative"
+      <Container maxW="6xl" position="relative" zIndex={1}>
+        <ScaleFade initialScale={0.9} in={true}>
+          <VStack spacing={{ base: 6, md: 10 }} w="full">
+            {/* Header Section */}
+            <Box textAlign="center" w="full">
+              <VStack spacing={4}>
+                <Flex align="center" gap={3} justify="center">
+                  <Box 
+                    w={12} 
+                    h={12} 
+                    bgGradient="linear(to-br, purple.500, pink.500)" 
+                    borderRadius="xl" 
+                    display="flex" 
+                    alignItems="center" 
+                    justifyContent="center"
+                  >
+                    <FiPalette color="white" size={24} />
+                  </Box>
+                  <Heading 
+                    color={textColor}
+                    fontSize={{ base: "3xl", md: "5xl" }}
+                    fontWeight="900"
+                    bgGradient="linear(to-r, purple.500, pink.500, blue.500)"
+                    bgClip="text"
+                  >
+                    Color Generator
+                  </Heading>
+                </Flex>
+                <Text 
+                  color={mutedColor} 
+                  fontSize={{ base: "lg", md: "xl" }}
+                  maxW="2xl"
+                  lineHeight="tall"
+                  px={4}
                 >
-                  <Input
-                    type="color"
-                    value={primaryColor}
-                    onChange={(e) => setPrimaryColor(e.target.value)}
-                    opacity={0}
-                    position="absolute"
-                    w="full"
-                    h="full"
-                    cursor="pointer"
-                  />
-                </Box>
-                <Input
-                  value={primaryColor}
-                  onChange={handleColorChange}
-                  placeholder="#4ade80"
-                  bg="white"
-                  color="black"
-                  size="md"
-                  maxW="200px"
-                />
-                <CopyIcon cursor="pointer" color="gray.500" />
-              </HStack>
-            </VStack>
+                  Create stunning color palettes instantly. Pick a base color and get a complete scale with beautiful shades.
+                </Text>
+              </VStack>
+            </Box>
 
-            {/* Add Secondary Color */}
-            <Button 
-              bg="black" 
-              color="white" 
-              size="lg" 
-              borderRadius="full"
-              _hover={{bg: 'gray.800'}}
-              leftIcon={<Text fontSize="xl">+</Text>}
+            {/* Main Content Card */}
+            <Box
+              bg={cardBg}
+              p={{ base: 6, md: 10 }}
+              borderRadius="3xl"
+              shadow="2xl"
+              w="full"
+              backdropFilter="blur(10px)"
+              border="1px solid"
+              borderColor={useColorModeValue("white", "gray.700")}
+              position="relative"
+              _before={{
+                content: '""',
+                position: "absolute",
+                top: 0,
+                left: 0,
+                right: 0,
+                height: "4px",
+                bgGradient: "linear(to-r, purple.500, pink.500, blue.500)",
+                borderTopRadius: "3xl",
+              }}
             >
-              Add secondary color scale
-            </Button>
+              <VStack spacing={8} align="stretch">
+                {/* Color Picker Section */}
+                <VStack spacing={6} align="stretch">
+                  {/* Palette Name */}
+                  <InputGroup size="lg">
+                    <InputLeftElement>
+                      <FiPalette color="purple.400" />
+                    </InputLeftElement>
+                    <Input
+                      value={paletteName}
+                      onChange={(e) => setPaletteName(e.target.value)}
+                      placeholder="Enter palette name"
+                      borderColor="gray.200"
+                      borderRadius="xl"
+                      _hover={{ borderColor: "purple.300" }}
+                      _focus={{ 
+                        borderColor: "purple.500", 
+                        boxShadow: "0 0 0 3px rgba(139, 92, 246, 0.1)" 
+                      }}
+                      bg={inputBg}
+                      fontSize="xl"
+                      fontWeight="semibold"
+                    />
+                  </InputGroup>
 
-            <Text fontSize="sm" color="gray.600">
-              Color combination scheme: auto
-            </Text>
+                  {/* Primary Color Picker */}
+                  <VStack align="stretch" spacing={4}>
+                    <HStack justify="space-between" align="center">
+                      <Text fontWeight="semibold" color={textColor} fontSize="lg">
+                        Primary Color
+                      </Text>
+                      <HStack>
+                        <Text fontSize="sm" color={mutedColor}>{colorFormat}</Text>
+                        <IconButton 
+                          size="sm" 
+                          variant="ghost" 
+                          icon={<SettingsIcon />}
+                          onClick={() => {
+                            const formats = ['HEX', 'HSL', 'RGB', 'OKLCH'];
+                            const currentIndex = formats.indexOf(colorFormat);
+                            const nextIndex = (currentIndex + 1) % formats.length;
+                            setColorFormat(formats[nextIndex]);
+                          }}
+                          borderRadius="lg"
+                        />
+                      </HStack>
+                    </HStack>
+                    
+                    <HStack spacing={4}>
+                      <Box 
+                        w={16} 
+                        h={16} 
+                        bg={primaryColor} 
+                        borderRadius="xl" 
+                        border="3px solid" 
+                        borderColor="gray.200"
+                        cursor="pointer"
+                        position="relative"
+                        shadow="md"
+                        _hover={{ transform: 'scale(1.05)', shadow: 'lg' }}
+                        transition="all 0.2s"
+                      >
+                        <Input
+                          type="color"
+                          value={primaryColor}
+                          onChange={(e) => setPrimaryColor(e.target.value)}
+                          opacity={0}
+                          position="absolute"
+                          w="full"
+                          h="full"
+                          cursor="pointer"
+                        />
+                      </Box>
+                      <InputGroup flex={1}>
+                        <Input
+                          value={primaryColor}
+                          onChange={handleColorChange}
+                          placeholder="#4ade80"
+                          bg={inputBg}
+                          color={textColor}
+                          size="lg"
+                          borderRadius="xl"
+                          borderColor="gray.200"
+                          _hover={{ borderColor: "purple.300" }}
+                          _focus={{ 
+                            borderColor: "purple.500", 
+                            boxShadow: "0 0 0 3px rgba(139, 92, 246, 0.1)" 
+                          }}
+                        />
+                        <InputLeftElement>
+                          <CopyIcon 
+                            cursor="pointer" 
+                            color="purple.400" 
+                            onClick={() => {
+                              navigator.clipboard.writeText(primaryColor);
+                              toast({
+                                title: 'Color copied!',
+                                description: `${primaryColor} copied to clipboard`,
+                                status: 'success',
+                                duration: 2000,
+                                isClosable: true,
+                              });
+                            }}
+                          />
+                        </InputLeftElement>
+                      </InputGroup>
+                    </HStack>
+                  </VStack>
 
-            {/* User Testimonial */}
-            <Box bg="white" p={6} borderRadius="xl" mt={8}>
-              <HStack mb={4}>
-                <Box w={10} h={10} bg="gray.300" borderRadius="full"></Box>
-                <Text fontWeight="semibold" color="black">Ruark Vallen</Text>
-              </HStack>
-              <Text color="gray.600" fontSize="sm" lineHeight="tall">
-                I love how every color you select, IT JUST LOOKS GOOD. Now it's just a matter of 
-                preference and whether the colors fits the mood you want to create.
-              </Text>
+                  {/* Save Button */}
+                  <Button
+                    size="lg"
+                    bgGradient="linear(to-r, purple.500, pink.500)"
+                    color="white"
+                    _hover={{
+                      bgGradient: "linear(to-r, purple.600, pink.600)",
+                      transform: "translateY(-2px)",
+                      shadow: "xl",
+                    }}
+                    _active={{
+                      transform: "translateY(0)",
+                    }}
+                    onClick={handleSavePalette}
+                    borderRadius="xl"
+                    fontSize="lg"
+                    fontWeight="bold"
+                    transition="all 0.3s ease"
+                    leftIcon={<FiPalette />}
+                  >
+                    Save Palette
+                  </Button>
+                </VStack>
+
+                {/* Color Palette */}
+                <ColorPalette 
+                  palette={palette} 
+                  colorFormat={colorFormat}
+                  onColorCopy={(color) => {
+                    navigator.clipboard.writeText(color);
+                    toast({
+                      title: 'Color copied!',
+                      description: `${color} copied to clipboard`,
+                      status: 'success',
+                      duration: 2000,
+                      isClosable: true,
+                    });
+                  }}
+                />
+
+                {/* UI Examples */}
+                <UIExamples primaryColor={primaryColor} palette={palette} />
+              </VStack>
             </Box>
           </VStack>
-
-          {/* Right Panel - Palette Display */}
-          <VStack spacing={6} align="stretch">
-            {/* Palette Header */}
-            <HStack justify="space-between">
-              <Input
-                value={paletteName}
-                onChange={(e) => setPaletteName(e.target.value)}
-                variant="unstyled"
-                fontSize="xl"
-                fontWeight="bold"
-                color="black"
-                maxW="200px"
-              />
-              <HStack>
-                <Button 
-                  variant="ghost" 
-                  size="sm"
-                  leftIcon={<StarIcon />}
-                  onClick={handleSavePalette}
-                >
-                  Save palette
-                </Button>
-              </HStack>
-            </HStack>
-
-            {/* Color Options */}
-            <HStack spacing={4}>
-              <Text fontSize="lg" fontWeight="semibold" color="black">Apple</Text>
-              <HStack spacing={4} ml="auto">
-                <Button variant="ghost" size="sm">Contrast grid</Button>
-                <Button variant="ghost" size="sm" onClick={handleExportPalette}>Export</Button>
-                <Button variant="ghost" size="sm">Edit</Button>
-              </HStack>
-            </HStack>
-
-            {/* Color Palette */}
-            <ColorPalette 
-              palette={palette} 
-              colorFormat={colorFormat}
-              onColorCopy={(color) => {
-                navigator.clipboard.writeText(color);
-                toast({
-                  title: 'Color copied!',
-                  description: `${color} copied to clipboard`,
-                  status: 'success',
-                  duration: 2000,
-                  isClosable: true,
-                });
-              }}
-            />
-
-            {/* UI Examples */}
-            <UIExamples primaryColor={primaryColor} palette={palette} />
-          </VStack>
-        </Grid>
+        </ScaleFade>
       </Container>
     </Box>
   );
