@@ -179,9 +179,6 @@ export default function ColorGenerator() {
                 <VStack spacing={6} align="stretch">
                   {/* Palette Name */}
                   <InputGroup size="lg">
-                    <InputLeftElement>
-                      <FiPalette color="purple.400" />
-                    </InputLeftElement>
                     <Input
                       value={paletteName}
                       onChange={(e) => setPaletteName(e.target.value)}
