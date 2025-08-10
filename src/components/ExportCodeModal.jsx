@@ -28,6 +28,9 @@ const ExportCodeModal = ({ isOpen, onClose, palette, paletteName }) => {
   const mutedColor = useColorModeValue("gray.600", "gray.400");
   const buttonBg = useColorModeValue("gray.100", "gray.700");
   const selectedButtonBg = useColorModeValue("purple.500", "purple.400");
+  const hoverBg = useColorModeValue("gray.200", "gray.600");
+  const codeBg = useColorModeValue("gray.50", "gray.900");
+  const borderColor = useColorModeValue("gray.200", "gray.600");
 
   const formats = [
     { name: 'Tailwind 3', badge: 'free' },
