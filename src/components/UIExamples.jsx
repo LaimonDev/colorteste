@@ -96,9 +96,9 @@ export default function UIExamples({ primaryColor, palette }) {
           </CardBody>
         </Card>
 
-        {/* Control Card */}
+        {/* Calendar Schedule Card */}
         <Card 
-          bg={getShadeColor('500')} 
+          bg="white" 
           borderRadius="2xl" 
           overflow="hidden"
           border="none"
@@ -108,23 +108,115 @@ export default function UIExamples({ primaryColor, palette }) {
         >
           <CardBody p={6}>
             <VStack align="stretch" spacing={4}>
-              {/* Image placeholder */}
-              <Box
-                h={{ base: "120px", md: "140px" }}
-                bg={getShadeColor('400')}
-                borderRadius="xl"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                backgroundImage="url('https://images.unsplash.com/photo-1593508512255-86ab42a8e620?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2Njl8MHwxfHNlYXJjaHwyfHxWUiUyMGhlYWRzZXR8ZW58MHx8fHwxNzU0ODIzNDg0fDA&ixlib=rb-4.1.0&q=85')"
-                backgroundSize="cover"
-                backgroundPosition="center"
-              />
+              {/* Date Header */}
+              <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="gray.700" mb={2}>
+                Sunday, August 10
+              </Text>
               
-              <VStack align="stretch" spacing={3}>
-                <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" color="white">
-                  Gain control
-                </Text>
+              {/* Meeting Cards */}
+              <VStack spacing={3} align="stretch">
+                {/* Design System Meeting */}
+                <Box
+                  bg="linear-gradient(135deg, #9f7aea, #b794f6)"
+                  borderRadius="xl"
+                  p={4}
+                  position="relative"
+                  minH="80px"
+                >
+                  <VStack align="start" spacing={2}>
+                    <Text fontSize="md" fontWeight="bold" color="white">
+                      Design system meeting
+                    </Text>
+                    <Text fontSize="sm" color="gray.100">
+                      9 - 10 AM
+                    </Text>
+                    {/* Avatar Group */}
+                    <HStack spacing={-2} mt={2}>
+                      {[1, 2, 3, 4].map((i) => (
+                        <Box
+                          key={i}
+                          w="28px"
+                          h="28px"
+                          borderRadius="full"
+                          bg={`hsl(${i * 60}, 70%, 60%)`}
+                          border="2px solid white"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Text fontSize="xs" color="white" fontWeight="bold">
+                            {String.fromCharCode(64 + i)}
+                          </Text>
+                        </Box>
+                      ))}
+                    </HStack>
+                  </VStack>
+                  <Box position="absolute" top={3} right={3}>
+                    <Text color="white" fontSize="lg">⋮</Text>
+                  </Box>
+                </Box>
+
+                {/* Lunch */}
+                <Box
+                  bg="linear-gradient(135deg, #ed64a6, #f687b3)"
+                  borderRadius="xl"
+                  p={4}
+                  position="relative"
+                  minH="60px"
+                >
+                  <VStack align="start" spacing={1}>
+                    <Text fontSize="md" fontWeight="bold" color="white">
+                      Lunch
+                    </Text>
+                    <Text fontSize="sm" color="gray.100">
+                      1 - 2 PM
+                    </Text>
+                  </VStack>
+                  <Box position="absolute" top={3} right={3}>
+                    <Text color="white" fontSize="lg">⋮</Text>
+                  </Box>
+                </Box>
+
+                {/* Design Review */}
+                <Box
+                  bg="linear-gradient(135deg, #fd9720, #fdb560)"
+                  borderRadius="xl"
+                  p={4}
+                  position="relative"
+                  minH="80px"
+                >
+                  <VStack align="start" spacing={2}>
+                    <Text fontSize="md" fontWeight="bold" color="white">
+                      Design review
+                    </Text>
+                    <Text fontSize="sm" color="gray.100">
+                      3 - 4 PM
+                    </Text>
+                    {/* Avatar Group */}
+                    <HStack spacing={-2} mt={2}>
+                      {[1, 2].map((i) => (
+                        <Box
+                          key={i}
+                          w="28px"
+                          h="28px"
+                          borderRadius="full"
+                          bg={`hsl(${i * 120}, 70%, 60%)`}
+                          border="2px solid white"
+                          display="flex"
+                          alignItems="center"
+                          justifyContent="center"
+                        >
+                          <Text fontSize="xs" color="white" fontWeight="bold">
+                            {String.fromCharCode(68 + i)}
+                          </Text>
+                        </Box>
+                      ))}
+                    </HStack>
+                  </VStack>
+                  <Box position="absolute" top={3} right={3}>
+                    <Text color="white" fontSize="lg">⋮</Text>
+                  </Box>
+                </Box>
               </VStack>
             </VStack>
           </CardBody>
