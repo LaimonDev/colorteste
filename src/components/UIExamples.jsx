@@ -271,12 +271,17 @@ export default function UIExamples({ primaryColor, palette }) {
                         w="40px"
                         h="40px"
                         borderRadius="full"
-                        bgImage={`url('https://images.unsplash.com/photo-${1500000000000 + i * 100000000}?w=150&h=150&fit=crop&crop=faces')`}
-                        bgSize="cover"
-                        bgPosition="center"
+                        bg={getShadeColor(`${200 + i * 100}`)}
                         border="3px solid white"
                         shadow="sm"
-                      />
+                        display="flex"
+                        alignItems="center"
+                        justifyContent="center"
+                      >
+                        <Text fontSize="sm" fontWeight="bold" color="white">
+                          {String.fromCharCode(64 + i)}
+                        </Text>
+                      </Box>
                     ))}
                     
                     {/* +8 Circle */}
@@ -284,7 +289,7 @@ export default function UIExamples({ primaryColor, palette }) {
                       w="40px"
                       h="40px"
                       borderRadius="full"
-                      bg="green.500"
+                      bg={getShadeColor('600')}
                       border="3px solid white"
                       display="flex"
                       alignItems="center"
