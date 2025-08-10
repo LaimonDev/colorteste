@@ -204,7 +204,7 @@ const ExportCodeModal = ({ isOpen, onClose, palette, paletteName }) => {
                     {format.badge && (
                       <Text
                         fontSize="xs"
-                        bg={useColorModeValue("gray.200", "gray.600")}
+                        bg={badgeBg}
                         px={2}
                         py={1}
                         borderRadius="md"
