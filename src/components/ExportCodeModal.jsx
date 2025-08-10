@@ -158,7 +158,7 @@ const ExportCodeModal = ({ isOpen, onClose, palette, paletteName }) => {
         <ModalHeader
           pb={4}
           borderBottom="1px solid"
-          borderColor={useColorModeValue("gray.200", "gray.600")}
+          borderColor={borderColor}
         >
           <HStack justify="space-between" align="center">
             <Text fontSize="2xl" fontWeight="bold" color={textColor}>
