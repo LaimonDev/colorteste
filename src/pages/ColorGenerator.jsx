@@ -258,22 +258,6 @@ export default function ColorGenerator() {
                             boxShadow: "0 0 0 3px rgba(139, 92, 246, 0.1)" 
                           }}
                         />
-                        <InputLeftElement>
-                          <CopyIcon 
-                            cursor="pointer" 
-                            color="purple.400" 
-                            onClick={() => {
-                              navigator.clipboard.writeText(primaryColor);
-                              toast({
-                                title: 'Color copied!',
-                                description: `${primaryColor} copied to clipboard`,
-                                status: 'success',
-                                duration: 2000,
-                                isClosable: true,
-                              });
-                            }}
-                          />
-                        </InputLeftElement>
                       </InputGroup>
                     </HStack>
                   </VStack>
