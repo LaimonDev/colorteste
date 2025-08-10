@@ -7,16 +7,6 @@ import {
   HStack,
   Card,
   CardBody,
-  Image,
-  Badge,
-  Button,
-  Progress,
-  Stat,
-  StatLabel,
-  StatNumber,
-  StatHelpText,
-  Flex,
-  Icon,
   Heading
 } from '@chakra-ui/react';
 import { ChevronRightIcon } from '@chakra-ui/icons';
