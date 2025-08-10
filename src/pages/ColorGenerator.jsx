@@ -8,7 +8,6 @@ import {
   VStack,
   Input,
   Button,
-  Grid,
   Flex,
   IconButton,
   useToast,
@@ -16,8 +15,7 @@ import {
   CardBody,
   useColorModeValue,
   ScaleFade,
-  InputGroup,
-  InputLeftElement
+  InputGroup
 } from '@chakra-ui/react';
 import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { FiPalette, FiSave } from 'react-icons/fi';
