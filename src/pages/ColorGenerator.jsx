@@ -15,13 +15,15 @@ import {
   CardBody,
   useColorModeValue,
   ScaleFade,
-  InputGroup
+  InputGroup,
+  useDisclosure
 } from '@chakra-ui/react';
 import { CopyIcon, SettingsIcon } from '@chakra-ui/icons';
 import { FiHome } from 'react-icons/fi';
 import { generateShades, formatColorValues, isLightColor } from '../utils/colorUtils';
 import ColorPalette from '../components/ColorPalette';
 import UIExamples from '../components/UIExamples';
+import ExportCodeModal from '../components/ExportCodeModal';
 
 export default function ColorGenerator() {
   const [primaryColor, setPrimaryColor] = useState('#4ade80');
