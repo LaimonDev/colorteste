@@ -188,7 +188,7 @@ const ExportCodeModal = ({ isOpen, onClose, palette, paletteName }) => {
                     bg={selectedFormat === format.name ? selectedButtonBg : buttonBg}
                     color={selectedFormat === format.name ? "white" : textColor}
                     _hover={{
-                      bg: selectedFormat === format.name ? selectedButtonBg : useColorModeValue("gray.200", "gray.600")
+                      bg: selectedFormat === format.name ? selectedButtonBg : hoverBg
                     }}
                     onClick={() => setSelectedFormat(format.name)}
                     justifyContent="space-between"
