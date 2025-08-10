@@ -301,7 +301,7 @@ export default function ColorGenerator() {
                     fontSize="lg"
                     fontWeight="bold"
                     transition="all 0.3s ease"
-                    leftIcon={<FiPalette />}
+                    leftIcon={<CopyIcon />}
                   >
                     Save Palette
                   </Button>
