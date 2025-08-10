@@ -222,9 +222,9 @@ export default function UIExamples({ primaryColor, palette }) {
           </CardBody>
         </Card>
 
-        {/* Budget Creation Card */}
+        {/* Payment Templates Card */}
         <Card 
-          bg={getShadeColor('400')} 
+          bg="white" 
           borderRadius="2xl" 
           overflow="hidden"
           border="none"
@@ -234,23 +234,70 @@ export default function UIExamples({ primaryColor, palette }) {
           gridColumn={{ base: "1", md: "span 1", lg: "span 1" }}
         >
           <CardBody p={6}>
-            <VStack align="stretch" spacing={4}>
-              {/* Image placeholder */}
-              <Box
-                h={{ base: "100px", md: "120px" }}
-                bg={getShadeColor('300')}
-                borderRadius="xl"
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                backgroundImage="url('https://images.unsplash.com/photo-1690264459607-a90b23d887f8?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDQ2NDN8MHwxfHNlYXJjaHwxfHxsYXB0b3AlMjBjb2xsYWJvcmF0aW9ufGVufDB8fHx8MTc1NDgyMzQ4OXww&ixlib=rb-4.1.0&q=85')"
-                backgroundSize="cover"
-                backgroundPosition="center"
-              />
-              
-              <Text fontSize={{ base: "xl", md: "2xl" }} fontWeight="bold" color="white">
-                Create budgets
+            <VStack align="stretch" spacing={6}>
+              {/* Payment Templates Header */}
+              <Text fontSize={{ base: "lg", md: "xl" }} fontWeight="bold" color="gray.800">
+                Payment Templates
               </Text>
+              
+              {/* Large Amount Display */}
+              <VStack align="stretch" spacing={4}>
+                <Text fontSize={{ base: "3xl", md: "4xl" }} fontWeight="bold" color="gray.900">
+                  $486.32
+                </Text>
+                
+                {/* Mandatory Payments Section */}
+                <VStack align="stretch" spacing={3}>
+                  <HStack justify="space-between" align="center">
+                    <VStack align="start" spacing={1}>
+                      <Text fontSize="md" fontWeight="semibold" color="gray.800">
+                        Mandatory payments
+                      </Text>
+                      <Text fontSize="sm" color="gray.500">
+                        Essential dues
+                      </Text>
+                    </VStack>
+                    <Box>
+                      <Text color="gray.400" fontSize="lg">↗</Text>
+                    </Box>
+                  </HStack>
+                  
+                  {/* Avatar Row */}
+                  <HStack spacing={-2} mt={4}>
+                    {/* Individual Avatars */}
+                    {[1, 2, 3].map((i) => (
+                      <Box
+                        key={i}
+                        w="40px"
+                        h="40px"
+                        borderRadius="full"
+                        bgImage={`url('https://images.unsplash.com/photo-${1500000000000 + i * 100000000}?w=150&h=150&fit=crop&crop=faces')`}
+                        bgSize="cover"
+                        bgPosition="center"
+                        border="3px solid white"
+                        shadow="sm"
+                      />
+                    ))}
+                    
+                    {/* +8 Circle */}
+                    <Box
+                      w="40px"
+                      h="40px"
+                      borderRadius="full"
+                      bg="green.500"
+                      border="3px solid white"
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      shadow="sm"
+                    >
+                      <Text fontSize="sm" fontWeight="bold" color="white">
+                        +8
+                      </Text>
+                    </Box>
+                  </HStack>
+                </VStack>
+              </VStack>
             </VStack>
           </CardBody>
         </Card>
