@@ -707,7 +707,7 @@ export default function PromptJsonEnhanced() {
                   </Button>
                   <a
                     href="https://laimonprompt.blogspot.com/"
-                    target="_self"
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Button
