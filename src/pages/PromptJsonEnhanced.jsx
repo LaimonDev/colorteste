@@ -728,7 +728,7 @@ export default function PromptJsonEnhanced() {
                   </a>
                   <a
                     href="https://saweria.co/laimondev/"
-                    target="_self"
+                    target="_blank"
                     rel="noopener noreferrer"
                   >
                     <Button
