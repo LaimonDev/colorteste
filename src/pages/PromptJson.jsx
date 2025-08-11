@@ -17,6 +17,20 @@ import {
   Divider,
   Code,
   useClipboard,
+  Select,
+  Textarea,
+  Collapse,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  NumberIncrementStepper,
+  NumberDecrementStepper,
+  Stack,
+  Tooltip,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
 import { 
   AddIcon, 
@@ -24,6 +38,9 @@ import {
   EditIcon,
   CopyIcon,
   CheckIcon,
+  ChevronDownIcon,
+  ChevronRightIcon,
+  SettingsIcon,
 } from "@chakra-ui/icons";
 import { 
   FiHome, 
@@ -32,6 +49,13 @@ import {
   FiZap,
   FiLayers,
   FiTarget,
+  FiType,
+  FiHash,
+  FiList,
+  FiPackage,
+  FiChevronDown,
+  FiChevronRight,
+  FiMoreHorizontal,
 } from "react-icons/fi";
 import { useState } from "react";
 import { ReactComponent as SaweriaIcon } from "../assets/iconsweria.svg";
