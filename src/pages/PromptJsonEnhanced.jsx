@@ -31,6 +31,16 @@ import {
   MenuButton,
   MenuList,
   MenuItem,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  FormControl,
+  FormLabel,
 } from "@chakra-ui/react";
 import { 
   AddIcon, 
@@ -56,6 +66,8 @@ import {
   FiChevronDown,
   FiChevronRight,
   FiMoreHorizontal,
+  FiSettings,
+  FiSave,
 } from "react-icons/fi";
 import { useState, useCallback, useMemo } from "react";
 import { ReactComponent as SaweriaIcon } from "../assets/iconsweria.svg";
@@ -101,8 +113,12 @@ export default function PromptJsonEnhanced() {
   const [fields, setFields] = useState([]);
   const [jsonResult, setJsonResult] = useState("");
   const [prompt, setPrompt] = useState("");
+  const [editingField, setEditingField] = useState(null);
+  const [editTitle, setEditTitle] = useState("");
+  
   const toast = useToast();
   const { hasCopied, onCopy } = useClipboard(prompt);
+  const { isOpen: isEditOpen, onOpen: onEditOpen, onClose: onEditClose } = useDisclosure();
 
   // Color mode values
   const bgGradient = useColorModeValue(
@@ -208,14 +224,33 @@ export default function PromptJsonEnhanced() {
     });
   }, [toast]);
 
-  // Edit field title
-  const editTitle = useCallback((id) => {
+  // Edit field title - FIXED: Using modal instead of prompt
+  const openEditModal = useCallback((id) => {
     const field = fields.find(f => f.id === id);
-    const newTitle = prompt("Masukkan nama field baru:", field.title);
-    if (newTitle && newTitle.trim()) {
-      updateField(id, { title: newTitle.trim() });
+    if (field) {
+      setEditingField(field);
+      setEditTitle(field.title);
+      onEditOpen();
     }
-  }, [fields, updateField]);
+  }, [fields, onEditOpen]);
+
+  // Save edited title
+  const saveEditedTitle = useCallback(() => {
+    if (editingField && editTitle.trim()) {
+      updateField(editingField.id, { title: editTitle.trim() });
+      toast({
+        title: "Field Diperbarui",
+        description: "Nama field berhasil diperbarui",
+        status: "success",
+        duration: 2000,
+        isClosable: true,
+        position: "bottom-right",
+      });
+    }
+    setEditingField(null);
+    setEditTitle("");
+    onEditClose();
+  }, [editingField, editTitle, updateField, onEditClose, toast]);
 
   // Toggle object expansion
   const toggleExpanded = useCallback((id) => {
@@ -301,7 +336,7 @@ export default function PromptJsonEnhanced() {
     
     toast({
       title: "Prompt Generated!",
-      description: "Prompt dengan JSON berhasil dibuat dan siap untuk dicopy",
+      description: "Prompt JSON berhasil dibuat dan siap untuk dicopy",
       status: "success",
       duration: 3000,
       isClosable: true,
@@ -309,12 +344,11 @@ export default function PromptJsonEnhanced() {
     });
   }, [subject, generateJsonFromFields, toast]);
 
-  // Handle copy
   const handleCopy = () => {
     onCopy();
     toast({
       title: "Berhasil Dicopy!",
-      description: "Prompt lengkap telah disalin ke clipboard",
+      description: "JSON prompt telah disalin ke clipboard",
       status: "success",
       duration: 2000,
       isClosable: true,
@@ -322,29 +356,29 @@ export default function PromptJsonEnhanced() {
     });
   };
 
-  // Load template (example structure)
+  // Load template - IMPROVED: Better template structure
   const loadTemplate = () => {
     const templateFields = [
-      { id: 1, title: "style", type: FIELD_TYPES.STRING, value: "voxel 3D", level: 0, parentId: null, isExpanded: true },
+      { id: 1, title: "style", type: FIELD_TYPES.STRING, value: "modern minimalist", level: 0, parentId: null, isExpanded: true },
       { id: 2, title: "material", type: FIELD_TYPES.OBJECT, value: "", level: 0, parentId: null, isExpanded: true },
-      { id: 3, title: "base", type: FIELD_TYPES.STRING, value: "hard plastic", level: 1, parentId: 2, isExpanded: true },
-      { id: 4, title: "texture", type: FIELD_TYPES.STRING, value: "smooth with subtle gridlines", level: 1, parentId: 2, isExpanded: true },
-      { id: 5, title: "finish", type: FIELD_TYPES.STRING, value: "semi-matte", level: 1, parentId: 2, isExpanded: true },
+      { id: 3, title: "base", type: FIELD_TYPES.STRING, value: "premium plastic", level: 1, parentId: 2, isExpanded: true },
+      { id: 4, title: "texture", type: FIELD_TYPES.STRING, value: "smooth matte", level: 1, parentId: 2, isExpanded: true },
+      { id: 5, title: "finish", type: FIELD_TYPES.STRING, value: "semi-gloss", level: 1, parentId: 2, isExpanded: true },
       { id: 6, title: "lighting", type: FIELD_TYPES.OBJECT, value: "", level: 0, parentId: null, isExpanded: true },
-      { id: 7, title: "type", type: FIELD_TYPES.STRING, value: "studio lightbox", level: 1, parentId: 6, isExpanded: true },
-      { id: 8, title: "intensity", type: FIELD_TYPES.STRING, value: "medium", level: 1, parentId: 6, isExpanded: true },
+      { id: 7, title: "type", type: FIELD_TYPES.STRING, value: "soft studio lighting", level: 1, parentId: 6, isExpanded: true },
+      { id: 8, title: "intensity", type: FIELD_TYPES.STRING, value: "balanced", level: 1, parentId: 6, isExpanded: true },
       { id: 9, title: "color_scheme", type: FIELD_TYPES.OBJECT, value: "", level: 0, parentId: null, isExpanded: true },
-      { id: 10, title: "primary", type: FIELD_TYPES.ARRAY, value: ["#ffcc00", "#ff3c3c", "#000000", "#ffffff"], level: 1, parentId: 9, isExpanded: true },
-      { id: 11, title: "accents", type: FIELD_TYPES.ARRAY, value: ["#00cfff", "#00cc00", "#ff00cc", "#666666"], level: 1, parentId: 9, isExpanded: true },
+      { id: 10, title: "primary", type: FIELD_TYPES.ARRAY, value: ["#2563eb", "#7c3aed", "#dc2626"], level: 1, parentId: 9, isExpanded: true },
+      { id: 11, title: "secondary", type: FIELD_TYPES.ARRAY, value: ["#64748b", "#f1f5f9", "#0f172a"], level: 1, parentId: 9, isExpanded: true },
       { id: 12, title: "contrast", type: FIELD_TYPES.STRING, value: "high", level: 1, parentId: 9, isExpanded: true },
     ];
     
     setFields(templateFields);
-    setSubject("retexture the image attached based on the JSON aesthetic below");
+    setSubject("Generate image based on the following design specifications");
     
     toast({
       title: "Template Dimuat!",
-      description: "Template voxel 3D berhasil dimuat",
+      description: "Template design modern berhasil dimuat",
       status: "success",
       duration: 2000,
       isClosable: true,
@@ -376,10 +410,33 @@ export default function PromptJsonEnhanced() {
                     size="xs"
                     icon={<EditIcon />}
                     aria-label="Edit title"
-                    onClick={() => editTitle(field.id)}
+                    onClick={() => openEditModal(field.id)}
                     colorScheme="blue"
                     variant="ghost"
                   />
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<AddIcon />}
+                      size="xs"
+                      variant="ghost"
+                      colorScheme="green"
+                    />
+                    <MenuList>
+                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.parentId, FIELD_TYPES.STRING, field.id)}>
+                        Add Text Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.parentId, FIELD_TYPES.NUMBER, field.id)}>
+                        Add Number Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.parentId, FIELD_TYPES.ARRAY, field.id)}>
+                        Add Array Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.parentId, FIELD_TYPES.OBJECT, field.id)}>
+                        Add Object Field
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
                   <IconButton
                     size="xs"
                     icon={<DeleteIcon />}
@@ -391,11 +448,12 @@ export default function PromptJsonEnhanced() {
                 </HStack>
               </HStack>
               <Input
-                size="sm"
-                placeholder="Masukkan nilai..."
+                placeholder="Enter text value..."
                 value={field.value}
                 onChange={(e) => updateField(field.id, { value: e.target.value })}
-                borderRadius="md"
+                size="sm"
+                borderRadius="lg"
+                _focus={{ borderColor: `${config.color}.500` }}
                 bg={cardBg}
               />
             </VStack>
@@ -421,10 +479,33 @@ export default function PromptJsonEnhanced() {
                     size="xs"
                     icon={<EditIcon />}
                     aria-label="Edit title"
-                    onClick={() => editTitle(field.id)}
+                    onClick={() => openEditModal(field.id)}
                     colorScheme="blue"
                     variant="ghost"
                   />
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<AddIcon />}
+                      size="xs"
+                      variant="ghost"
+                      colorScheme="green"
+                    />
+                    <MenuList>
+                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.parentId, FIELD_TYPES.STRING, field.id)}>
+                        Add Text Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.parentId, FIELD_TYPES.NUMBER, field.id)}>
+                        Add Number Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.parentId, FIELD_TYPES.ARRAY, field.id)}>
+                        Add Array Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.parentId, FIELD_TYPES.OBJECT, field.id)}>
+                        Add Object Field
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
                   <IconButton
                     size="xs"
                     icon={<DeleteIcon />}
@@ -436,11 +517,15 @@ export default function PromptJsonEnhanced() {
                 </HStack>
               </HStack>
               <NumberInput
-                size="sm"
                 value={field.value}
-                onChange={(valueString, valueNumber) => updateField(field.id, { value: valueNumber || 0 })}
+                onChange={(value) => updateField(field.id, { value: parseFloat(value) || 0 })}
+                size="sm"
               >
-                <NumberInputField borderRadius="md" bg={cardBg} />
+                <NumberInputField
+                  borderRadius="lg"
+                  _focus={{ borderColor: `${config.color}.500` }}
+                  bg={cardBg}
+                />
                 <NumberInputStepper>
                   <NumberIncrementStepper />
                   <NumberDecrementStepper />
@@ -453,7 +538,7 @@ export default function PromptJsonEnhanced() {
       case FIELD_TYPES.ARRAY:
         return (
           <Box style={indentStyle}>
-            <VStack spacing={3} align="stretch">
+            <VStack spacing={2} align="stretch">
               <HStack justify="space-between">
                 <HStack>
                   <Icon as={config.icon} color={`${config.color}.500`} />
@@ -461,26 +546,49 @@ export default function PromptJsonEnhanced() {
                     {field.title}
                   </Text>
                   <Badge colorScheme={config.color} variant="subtle" size="sm">
-                    {config.label} ({field.value.filter(v => v.trim() !== '').length})
+                    {config.label} ({field.value.length})
                   </Badge>
                 </HStack>
                 <HStack spacing={1}>
                   <IconButton
                     size="xs"
-                    icon={<AddIcon />}
-                    aria-label="Add array item"
-                    onClick={() => addArrayItem(field.id)}
-                    colorScheme={config.color}
+                    icon={<EditIcon />}
+                    aria-label="Edit title"
+                    onClick={() => openEditModal(field.id)}
+                    colorScheme="blue"
                     variant="ghost"
                   />
                   <IconButton
                     size="xs"
-                    icon={<EditIcon />}
-                    aria-label="Edit title"
-                    onClick={() => editTitle(field.id)}
-                    colorScheme="blue"
+                    icon={<AddIcon />}
+                    aria-label="Add array item"
+                    onClick={() => addArrayItem(field.id)}
+                    colorScheme="purple"
                     variant="ghost"
                   />
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<FiPlus />}
+                      size="xs"
+                      variant="ghost"
+                      colorScheme="green"
+                    />
+                    <MenuList>
+                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.parentId, FIELD_TYPES.STRING, field.id)}>
+                        Add Text Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.parentId, FIELD_TYPES.NUMBER, field.id)}>
+                        Add Number Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.parentId, FIELD_TYPES.ARRAY, field.id)}>
+                        Add Array Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.parentId, FIELD_TYPES.OBJECT, field.id)}>
+                        Add Object Field
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
                   <IconButton
                     size="xs"
                     icon={<DeleteIcon />}
@@ -491,28 +599,31 @@ export default function PromptJsonEnhanced() {
                   />
                 </HStack>
               </HStack>
-              <VStack spacing={2} align="stretch" pl={4}>
+              <VStack spacing={1} align="stretch">
                 {field.value.map((item, index) => (
                   <HStack key={index} spacing={2}>
-                    <Badge size="sm" colorScheme="gray">{index + 1}</Badge>
+                    <Text fontSize="xs" color={mutedColor} w="20px">
+                      {index}:
+                    </Text>
                     <Input
-                      size="sm"
-                      placeholder="Item value..."
+                      placeholder={`Item ${index + 1}`}
                       value={item}
                       onChange={(e) => updateArrayItem(field.id, index, e.target.value)}
+                      size="sm"
+                      borderRadius="lg"
+                      _focus={{ borderColor: `${config.color}.500` }}
                       bg={cardBg}
-                      borderRadius="md"
+                      flex={1}
                     />
-                    {field.value.length > 1 && (
-                      <IconButton
-                        size="xs"
-                        icon={<DeleteIcon />}
-                        aria-label="Remove item"
-                        onClick={() => removeArrayItem(field.id, index)}
-                        colorScheme="red"
-                        variant="ghost"
-                      />
-                    )}
+                    <IconButton
+                      size="xs"
+                      icon={<DeleteIcon />}
+                      aria-label="Remove item"
+                      onClick={() => removeArrayItem(field.id, index)}
+                      colorScheme="red"
+                      variant="ghost"
+                      isDisabled={field.value.length === 1}
+                    />
                   </HStack>
                 ))}
               </VStack>
@@ -529,7 +640,7 @@ export default function PromptJsonEnhanced() {
                   <IconButton
                     size="xs"
                     icon={field.isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}
-                    aria-label="Toggle expanded"
+                    aria-label="Toggle expansion"
                     onClick={() => toggleExpanded(field.id)}
                     variant="ghost"
                   />
@@ -542,35 +653,37 @@ export default function PromptJsonEnhanced() {
                   </Badge>
                 </HStack>
                 <HStack spacing={1}>
-                  <Menu>
-                    <MenuButton
-                      as={IconButton}
-                      size="xs"
-                      icon={<AddIcon />}
-                      aria-label="Add nested field"
-                      colorScheme={config.color}
-                      variant="ghost"
-                    />
-                    <MenuList>
-                      {Object.entries(FIELD_TYPE_CONFIG).map(([type, typeConfig]) => (
-                        <MenuItem
-                          key={type}
-                          icon={<Icon as={typeConfig.icon} />}
-                          onClick={() => addField(field.id, type)}
-                        >
-                          Add {typeConfig.label}
-                        </MenuItem>
-                      ))}
-                    </MenuList>
-                  </Menu>
                   <IconButton
                     size="xs"
                     icon={<EditIcon />}
                     aria-label="Edit title"
-                    onClick={() => editTitle(field.id)}
+                    onClick={() => openEditModal(field.id)}
                     colorScheme="blue"
                     variant="ghost"
                   />
+                  <Menu>
+                    <MenuButton
+                      as={IconButton}
+                      icon={<AddIcon />}
+                      size="xs"
+                      variant="ghost"
+                      colorScheme="green"
+                    />
+                    <MenuList>
+                      <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(field.id, FIELD_TYPES.STRING)}>
+                        Add Text Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(field.id, FIELD_TYPES.NUMBER)}>
+                        Add Number Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(field.id, FIELD_TYPES.ARRAY)}>
+                        Add Array Field
+                      </MenuItem>
+                      <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(field.id, FIELD_TYPES.OBJECT)}>
+                        Add Nested Object
+                      </MenuItem>
+                    </MenuList>
+                  </Menu>
                   <IconButton
                     size="xs"
                     icon={<DeleteIcon />}
@@ -590,8 +703,8 @@ export default function PromptJsonEnhanced() {
     }
   };
 
-  // Filter and render visible fields
-  const renderFields = useMemo(() => {
+  // Get visible fields (considering collapsed objects)
+  const visibleFields = useMemo(() => {
     const visibleFields = [];
     
     const processField = (field) => {
@@ -639,7 +752,7 @@ export default function PromptJsonEnhanced() {
         zIndex={0}
       />
 
-      <Container maxW="6xl" position="relative" zIndex={1}>
+      <Container maxW="7xl" position="relative" zIndex={1}>
         <ScaleFade initialScale={0.9} in={true}>
           <VStack spacing={10} w="full">
             {/* Header Section */}
@@ -694,7 +807,7 @@ export default function PromptJsonEnhanced() {
                     size="md"
                     variant="ghost"
                     colorScheme="purple"
-                    leftIcon={<Icon as={FiZap} />}
+                    leftIcon={<Icon as={FiSettings} />}
                     onClick={loadTemplate}
                     _hover={{
                       bg: "purple.50",
@@ -786,7 +899,7 @@ export default function PromptJsonEnhanced() {
                       </HStack>
                       <Textarea
                         size="md"
-                        placeholder="Contoh: retexture the image attached based on the JSON aesthetic below"
+                        placeholder="Contoh: Generate image based on the following design specifications"
                         value={subject}
                         onChange={(e) => setSubject(e.target.value)}
                         borderColor="gray.200"
@@ -798,13 +911,13 @@ export default function PromptJsonEnhanced() {
                         }}
                         bg={inputBg}
                         rows={3}
-                        resize="vertical"
+                        fontSize="md"
                       />
                     </Box>
 
                     <Divider />
 
-                    {/* Fields Section */}
+                    {/* Dynamic Fields Section */}
                     <Box>
                       <HStack justify="space-between" mb={4}>
                         <HStack>
@@ -828,33 +941,33 @@ export default function PromptJsonEnhanced() {
                             Add Field
                           </MenuButton>
                           <MenuList>
-                            {Object.entries(FIELD_TYPE_CONFIG).map(([type, config]) => (
-                              <MenuItem
-                                key={type}
-                                icon={<Icon as={config.icon} color={`${config.color}.500`} />}
-                                onClick={() => addField(null, type)}
-                              >
-                                <VStack spacing={0} align="start">
-                                  <Text>{config.label}</Text>
-                                  <Text fontSize="xs" color="gray.500">{config.description}</Text>
-                                </VStack>
-                              </MenuItem>
-                            ))}
+                            <MenuItem icon={<Icon as={FiType} />} onClick={() => addField(null, FIELD_TYPES.STRING)}>
+                              Text Field
+                            </MenuItem>
+                            <MenuItem icon={<Icon as={FiHash} />} onClick={() => addField(null, FIELD_TYPES.NUMBER)}>
+                              Number Field
+                            </MenuItem>
+                            <MenuItem icon={<Icon as={FiList} />} onClick={() => addField(null, FIELD_TYPES.ARRAY)}>
+                              Array Field
+                            </MenuItem>
+                            <MenuItem icon={<Icon as={FiPackage} />} onClick={() => addField(null, FIELD_TYPES.OBJECT)}>
+                              Object Field
+                            </MenuItem>
                           </MenuList>
                         </Menu>
                       </HStack>
 
                       <VStack spacing={4} align="stretch">
-                        {renderFields.map((field) => (
+                        {visibleFields.map((field) => (
                           <Box
                             key={field.id}
-                            p={3}
-                            borderRadius="lg"
+                            p={4}
+                            borderRadius="xl"
                             border="1px solid"
                             borderColor={borderColor}
                             bg={fieldBg}
-                            borderLeftWidth="4px"
-                            borderLeftColor={`${FIELD_TYPE_CONFIG[field.type].color}.400`}
+                            _hover={{ borderColor: `${FIELD_TYPE_CONFIG[field.type].color}.300` }}
+                            transition="all 0.2s ease"
                           >
                             {renderFieldInput(field)}
                           </Box>
@@ -868,17 +981,18 @@ export default function PromptJsonEnhanced() {
                             border="2px dashed"
                             borderColor={borderColor}
                           >
-                            <Icon as={FiPackage} fontSize="40" color="gray.400" mb={3} />
-                            <Text color="gray.500" mb={2}>
-                              Belum ada field JSON. Mulai buat struktur kompleks!
+                            <Icon as={FiPlus} fontSize="40" color="gray.400" mb={3} />
+                            <Text color="gray.500" mb={3}>
+                              Belum ada field JSON. Klik tombol "Add Field" untuk memulai.
                             </Text>
                             <Button
                               size="sm"
                               colorScheme="teal"
                               variant="outline"
                               onClick={loadTemplate}
+                              leftIcon={<Icon as={FiSettings} />}
                             >
-                              Coba Template Voxel 3D
+                              Coba Template Modern
                             </Button>
                           </Box>
                         )}
@@ -908,7 +1022,7 @@ export default function PromptJsonEnhanced() {
                       transition="all 0.3s ease"
                       w="full"
                     >
-                      Generate Prompt with JSON
+                      Generate JSON Prompt
                     </Button>
                   </VStack>
                 </Box>
@@ -990,6 +1104,34 @@ export default function PromptJsonEnhanced() {
           </VStack>
         </ScaleFade>
       </Container>
+
+      {/* Edit Field Modal */}
+      <Modal isOpen={isEditOpen} onClose={onEditClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Edit Field Name</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <FormControl>
+              <FormLabel>Field Name</FormLabel>
+              <Input
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+                placeholder="Enter field name..."
+                autoFocus
+              />
+            </FormControl>
+          </ModalBody>
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={saveEditedTitle} leftIcon={<Icon as={FiSave} />}>
+              Save
+            </Button>
+            <Button variant="ghost" onClick={onEditClose}>
+              Cancel
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 }
